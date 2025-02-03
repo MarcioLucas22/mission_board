@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Cadastrar Tarefa
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="display-6">Cadastrar Tarefa</h3>
+
+    <div class="card">
+        <div class="card-body">
+            <form action="{% url 'task_create' %}" method="post" class="form">
+                {% csrf_token %}
+                {{ form.as_p }} <!-- Exibe os campos do formulário -->
+                <button type="submit" class="btn btn-primary">Cadastrar</button>
+            </form>
+        </div>
+    </div>
+    <a href="{% url 'task_list' %}" class="btn btn-secondary mt-3">Cancelar e voltar para a lista de tarefas</a>
+</div>
+{% endblock %}
