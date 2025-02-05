@@ -4,7 +4,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from . import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Task
+from .models import Task, Category
 from django.shortcuts import get_object_or_404, redirect
 
 class TasksListView(LoginRequiredMixin, ListView):
@@ -15,15 +15,35 @@ class TasksListView(LoginRequiredMixin, ListView):
     def get_queryset(self): # Método que faz filtros pelo título da tarefa
         queryset = super().get_queryset()
         title = self.request.GET.get('title')
+        priority = self.request.GET.get('priority')
+        category = self.request.GET.get('category')
 
         if title:
             queryset = queryset.filter(title__icontains=title)
+
+        if priority:
+            queryset = queryset.filter(priority=priority)
+
+        if category:
+            queryset = queryset.filter(category__id=category)
 
         return queryset
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs) # Pegando o contexto original
-        context['tasks'] = Task.objects.all()
+        context['tasks'] = Task.objects.filter(completed=False)
+        context['categories'] = Category.objects.all()
+        return context
+    
+
+class CompletedTasksView(LoginRequiredMixin, ListView):
+    model = Task
+    context_object_name = 'tasks'
+    template_name = 'completed_tasks.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tasks'] = Task.objects.filter(completed=True)
         return context
 
 
