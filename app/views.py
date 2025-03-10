@@ -2,9 +2,22 @@ from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
+from tasks.models import Task
+import json
 
-class HomeView(TemplateView):
+class HomeView(LoginRequiredMixin, TemplateView):
     template_name = 'home.html'  
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)  
+        
+        # Contando as tarefas concluídas e não concluídas
+        context['tasks_completed'] = json.dumps(Task.objects.filter(completed=True).count())
+        context['tasks_not_completed'] = json.dumps(Task.objects.filter(completed=False).count())
+        
+        return context
+
 
 
 

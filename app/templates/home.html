@@ -6,4 +6,41 @@ Home
 {% endblock %}
 
 {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="row mt-4 justify-content-center">
+    <div class="col-md-6 text-center">
+        <h5 class="text-center mb-3">Tarefas Concluídas</h5>
+        <div class="embed-responsive embed-responsive-1by1" style="width: 400px; display: inline-block;"></div>
+            <canvas id="tasksCompletedChart" class="embed-responsive-item"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var tasksCompleted = JSON.parse('{{ tasks_completed|safe }}');
+        var tasksNotCompleted = JSON.parse('{{ tasks_not_completed|safe }}');
+        
+        var ctxTask = document.getElementById('tasksCompletedChart').getContext('2d');
+        
+        var tasksCompletedChart = new Chart(ctxTask, {
+            type: 'doughnut',
+            data: {
+                labels: ['Concluídas', 'Não Concluídas'],
+                datasets: [{
+                    data: [tasksCompleted, tasksNotCompleted],
+                    backgroundColor: ['#36A2EB', '#FF6384'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: true
+                    },
+                }
+            }
+        });
+    });
+</script>
 {% endblock %}
