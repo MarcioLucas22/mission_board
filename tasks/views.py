@@ -18,10 +18,6 @@ class TasksListView(LoginRequiredMixin, ListView):
         priority = self.request.GET.get('priority')
         category = self.request.GET.get('category')
 
-        print("title ", title)
-        print("priority ", priority)
-        print("category ", category)
-
         if title:
             queryset = queryset.filter(title__icontains=title)
 

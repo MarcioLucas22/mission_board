@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+
 
 class Goal(models.Model):
     TIMEFRAME_CHOICES = [
@@ -7,7 +9,7 @@ class Goal(models.Model):
         ('long', 'Longo Prazo'),
     ]
 
-    user = models.ForeignKey("users.CustomUser", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     timeframe = models.CharField(max_length=10, choices=TIMEFRAME_CHOICES)

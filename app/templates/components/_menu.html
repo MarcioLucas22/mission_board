@@ -1,8 +1,8 @@
 {% load static %}
 <div class="container-fluid">
     <div class="row flex-nowrap">
-        <div class="col-auto px-0 bg-dark position-fixed start-0 top-0" id="sidebar" style="z-index: 1030;">
-            <div class="d-flex flex-column px-3 pt-2 text-white min-vh-100">
+        <div class="col-auto px-0 bg-dark position-fixed start-0 top-0 d-flex flex-column min-vh-100" id="sidebar" style="z-index: 1030;">
+            <div class="d-flex flex-column px-3 pt-2 text-white flex-grow-1">
                 <div class="logo-container">
                     <a href="{% url 'home' %}" class="d-flex align-items-center text-white text-decoration-none">
                         <img src="{% static 'images/logo.svg' %}" alt="Logo" class="img-fluid logo">
@@ -14,7 +14,7 @@
                         <i class="bi bi-list"></i>
                     </button>
                 </div>
-                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 w-100" id="menu">
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 w-100 flex-grow-1" id="menu">
                     <li class="nav-item w-100">
                         <a href="{% url 'home' %}" class="nav-link px-0 text-white">
                             <i class="bi bi-house"></i> <span class="menu-text ms-2">Home</span>
@@ -26,7 +26,7 @@
                         </a>
                     </li>
                     <li class="nav-item w-100">
-                        <a href="#" class="nav-link px-0 text-white">
+                        <a href="{% url 'goal_list' %}" class="nav-link px-0 text-white">
                             <i class="bi bi-trophy"></i> <span class="menu-text ms-2">Metas e Objetivos</span>
                         </a>
                     </li>
@@ -35,7 +35,13 @@
                             <i class="bi bi-gear"></i> <span class="menu-text ms-2">Configurações</span>
                         </a>
                     </li>
-                    <li class="nav-item w-100">
+                </ul>
+        
+                <!-- Separador -->
+                <hr class="border-secondary my-3">
+
+                <ul class="d-flex align-items-center flex-column mx-auto mb-3 list-unstyled">
+                    <li class="nav-item w-100 mt-auto">
                         <form action="{% url 'logout' %}" method="post" style="display: inline;">
                             {% csrf_token %}
                             <button type="submit" class="nav-link px-0 text-white" style="background: none; border: none; padding: 0;">
@@ -43,10 +49,10 @@
                             </button>
                         </form>
                     </li>
-                </ul>
-
+                </ul>                                
             </div>
         </div>
+        
         <!-- Elemento espaçador para evitar sobreposição -->
         <div class="col-auto" style="width: 250px;"></div>
     </div>
