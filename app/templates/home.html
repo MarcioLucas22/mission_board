@@ -8,11 +8,20 @@ Home
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <div class="row mt-4 justify-content-center">
-    <div class="col-md-6 text-center">
+    <div class="col-md-6 col-lg-5 text-center">
         <h5 class="text-center mb-3">Tarefas Concluídas</h5>
         <div class="d-flex justify-content-center">
             <div class="position-relative" style="max-width: 350px; width: 100%;">
                 <canvas id="tasksCompletedChart" class="w-100 h-auto"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-5 text-center">
+        <h5 class="text-center mb-3">Metas Concluídas</h5>
+        <div class="d-flex justify-content-center">
+            <div class="position-relative" style="max-width: 350px; width: 100%;">
+                <canvas id="goalsCompletedChart" class="w-100 h-auto"></canvas>
             </div>
         </div>
     </div>
@@ -22,16 +31,16 @@ Home
     document.addEventListener("DOMContentLoaded", function () {
         var tasksCompleted = JSON.parse('{{ tasks_completed|safe }}');
         var tasksNotCompleted = JSON.parse('{{ tasks_not_completed|safe }}');
-        
+    
         var ctxTask = document.getElementById('tasksCompletedChart').getContext('2d');
-        
+    
         var tasksCompletedChart = new Chart(ctxTask, {
             type: 'doughnut',
             data: {
                 labels: ['Concluídas', 'Não Concluídas'],
                 datasets: [{
                     data: [tasksCompleted, tasksNotCompleted],
-                    backgroundColor: ['#36A2EB', '#FF6384'],
+                    backgroundColor: ['#28a745', '#dc3545'], // Verde elegante para concluídas, vermelho sofisticado para não concluídas
                     borderWidth: 1
                 }]
             },
@@ -44,5 +53,32 @@ Home
             }
         });
     });
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        var goalsCompleted = JSON.parse('{{ goals_completed|safe }}');
+        var goalsNotCompleted = JSON.parse('{{ goals_not_completed|safe }}');
+    
+        var ctxGoal = document.getElementById('goalsCompletedChart').getContext('2d');
+    
+        var goalsCompletedChart = new Chart(ctxGoal, {
+            type: 'doughnut',
+            data: {
+                labels: ['Concluídas', 'Não Concluídas'],
+                datasets: [{
+                    data: [goalsCompleted, goalsNotCompleted],
+                    backgroundColor: ['#007bff', '#ff6b6b'], // Azul moderno para concluídas, vermelho suave para não concluídas
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: true
+                    },
+                }
+            }
+        });
+    });
+    
 </script>
 {% endblock %}

@@ -22,6 +22,7 @@ class Task(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
     due_date = models.DateField()
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='medium')
+    goal = models.ForeignKey("goals.Goal", on_delete=models.CASCADE, blank=True, null=True)
     completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 

@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from tasks.models import Task
+from goals.models import Goal
 import json
 
 class HomeView(LoginRequiredMixin, TemplateView):
@@ -15,6 +16,9 @@ class HomeView(LoginRequiredMixin, TemplateView):
         # Contando as tarefas concluídas e não concluídas
         context['tasks_completed'] = json.dumps(Task.objects.filter(completed=True).count())
         context['tasks_not_completed'] = json.dumps(Task.objects.filter(completed=False).count())
+
+        context['goals_completed'] = json.dumps(Goal.objects.filter(completed=True).count())
+        context['goals_not_completed'] = json.dumps(Goal.objects.filter(completed=False).count())
         
         return context
 

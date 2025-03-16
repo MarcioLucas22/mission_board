@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Atualizar Meta
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="display-6">Atualizar Meta</h3>
+
+    <div class="card">
+        <div class="card-body">
+            <form action="{% url 'goal_update' goal.id %}" method="post" class="form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Atualizar</button>
+            </form>
+        </div>
+    </div>
+    <a href="{% url 'goal_list' %}" class="btn btn-secondary mt-3">Cancelar e voltar para a lista de metas</a>
+{% endblock %}

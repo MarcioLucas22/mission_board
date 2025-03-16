@@ -18,10 +18,10 @@ Minhas Tarefas
         </form>                    
     </div>
     <div class="col-md-4 offset-md-4">
-        <a href="{% url 'completed_tasks' %}" class="btn btn-primary float-end btn-custom">
+        <a href="{% url 'completed_tasks' %}" class="btn btn-success float-end btn-custom">
             <i class="bi bi-check-circle"></i> Tarefas concluídas
         </a>
-        <a href="{% url 'task_create' %}" class="btn btn-success float-end btn-custom me-3">
+        <a href="{% url 'task_create' %}" class="btn btn-primary float-end btn-custom me-3">
             <i class="bi bi-plus"></i> Cadastrar tarefa
         </a>
     </div>
@@ -82,6 +82,12 @@ Minhas Tarefas
                     <small class="text-muted">
                         <i class="bi bi-clock"></i> Prazo: {{ task.due_date|date:"d/m/Y" }}
                     </small>
+                    {% if task.goal %}
+                    <br>
+                    <small class="text-muted">
+                        <i class="bi bi-flag"></i> Meta relacionada: {{ task.goal.title }}
+                    </small>
+                    {% endif %}
                 </div>
             </div>
             <div class="card-footer bg-transparent">

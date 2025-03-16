@@ -1,33 +1,12 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Minhas Metas e Objetivos
+Metas Concluídas
 {% endblock %}
 
 {% block content %}
-<h3 class="display-6">Minhas Metas e Objetivos</h3>
-<div class="row mb-3">
-    <div class="col-md-4">
-        <form method="get" action="{% url 'goal_list' %}">
-            <div class="input-group">
-                <input type="text" name="title" class="form-control" placeholder="Título da meta" value="{{ request.GET.title }}">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-search"></i>
-                </button>
-            </div>
-        </form>                    
-    </div>
-    <div class="col-md-4 offset-md-4">
-        <a href="{% url 'completed_goals' %}" class="btn btn-success float-end btn-custom">
-            <i class="bi bi-check-circle"></i> Metas concluídas
-        </a>
-        <a href="{% url 'goal_create' %}" class="btn btn-primary float-end btn-custom me-3">
-            <i class="bi bi-plus"></i> Cadastrar meta
-        </a>
-    </div>
-</div>
-
 <div class="row mt-4">
+    <h3 class="display-6">Metas Concluídas</h3>
     {% for goal in goals %}
     <div class="col-md-6 col-lg-4 mb-4">
         <div class="card h-100 shadow-sm">
@@ -58,15 +37,11 @@ Minhas Metas e Objetivos
                     </small>
                 </div>
             </div>
-
             <div class="card-footer bg-transparent">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center">                    
                     <div class="btn-group">
-                        <a href="{% url 'goal_update' goal.id %}" class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-
-                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ goal.id }}">
+                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                            data-bs-target="#deleteModal{{ goal.id }}">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
@@ -76,7 +51,8 @@ Minhas Metas e Objetivos
     </div>
 
     <!-- Modal de Confirmação de Exclusão -->
-    <div class="modal fade" id="deleteModal{{ goal.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ goal.id }}" aria-hidden="true">
+    <div class="modal fade" id="deleteModal{{ goal.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ goal.id }}"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -84,7 +60,7 @@ Minhas Metas e Objetivos
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Tem certeza que deseja excluir a meta "{{ goal.title }}"?
+                    Tem certeza que deseja excluir a tarefa "{{ goal.title }}"?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -96,11 +72,11 @@ Minhas Metas e Objetivos
             </div>
         </div>
     </div>
-    
+
     {% empty %}
     <div class="col-12">
         <div class="alert alert-info text-center" role="alert">
-            <i class="bi bi-info-circle me-2"></i>Nenhuma meta e objetivo encontrado.
+            <i class="bi bi-info-circle me-2"></i>Nenhuma tarefa encontrada.
         </div>
     </div>
     {% endfor %}

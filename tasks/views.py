@@ -36,17 +36,6 @@ class TasksListView(LoginRequiredMixin, ListView):
         return context
     
 
-class CompletedTasksView(LoginRequiredMixin, ListView):
-    model = models.Task
-    context_object_name = 'tasks'
-    template_name = 'completed_tasks.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['tasks'] = Task.objects.filter(completed=True)
-        return context
-
-
 class TaskCreateView(LoginRequiredMixin, CreateView):
     model = models.Task
     template_name = 'task_create.html'
@@ -83,3 +72,14 @@ class CompleteTaskView(LoginRequiredMixin, UpdateView):
 
         task.save()
         return redirect('task_list')
+    
+
+class CompletedTasksView(LoginRequiredMixin, ListView):
+    model = models.Task
+    context_object_name = 'tasks'
+    template_name = 'completed_tasks.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tasks'] = Task.objects.filter(completed=True)
+        return context
