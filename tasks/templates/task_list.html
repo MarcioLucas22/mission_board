@@ -223,13 +223,11 @@ Minhas Tarefas
         <div class="card task-card priority-{{ task.priority }}">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0 text-truncate">{{ task.title }}</h5>
-                <form method="POST" action="{% url 'complete_task' task.id %}" class="ms-2">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-complete" title="Marcar como concluída">
-                        <i class="bi {% if task.completed %}bi-check-circle-fill{% else %}bi-circle{% endif %}"></i>
-                    </button>
-                </form>
-            </div>
+                <!-- Button to trigger complete confirmation modal -->
+                <button type="button" class="btn-complete ms-2" title="Marcar como concluída" data-bs-toggle="modal" data-bs-target="#completeModal{{ task.id }}">
+                    <i class="bi {% if task.completed %}bi-check-circle-fill{% else %}bi-circle{% endif %}"></i>
+                </button>
+            </div>            
 
             <div class="card-body">
                 <p class="card-text text-secondary mb-4">{{ task.description|truncatewords:20 }}</p>
@@ -256,6 +254,28 @@ Minhas Tarefas
                     <button type="button" class="btn-action" data-bs-toggle="modal" data-bs-target="#deleteModal{{ task.id }}" title="Excluir">
                         <i class="bi bi-trash"></i>
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Complete Confirmation Modal -->
+    <div class="modal fade" id="completeModal{{ task.id }}" tabindex="-1" aria-labelledby="completeModalLabel{{ task.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="completeModalLabel{{ task.id }}">Confirmar Conclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja marcar a tarefa "{{ task.title }}" como concluída?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form method="POST" action="{% url 'complete_task' task.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Confirmar</button>
+                    </form>
                 </div>
             </div>
         </div>
