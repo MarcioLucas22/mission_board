@@ -1,89 +1,193 @@
 {% load static %}
 <div class="container-fluid">
     <div class="row flex-nowrap">
-        <div class="col-auto px-0 bg-dark position-fixed start-0 top-0 d-flex flex-column min-vh-100" id="sidebar" style="z-index: 1030;">
-            <div class="d-flex flex-column px-3 pt-2 text-white flex-grow-1">
-                <div class="logo-container">
-                    <a href="{% url 'home' %}" class="d-flex align-items-center text-white text-decoration-none">
-                        <img src="{% static 'images/logo.svg' %}" alt="Logo" class="img-fluid logo">
-                        <span class="menu-text ms-2">Mission Board</span>
+        <div class="col-auto px-0 sidebar-container position-fixed start-0 top-0 d-flex flex-column min-vh-100 shadow-lg" id="sidebar">
+            <div class="d-flex flex-column px-3 pt-3 text-white h-100">
+                <div class="logo-container mb-4 text-center">
+                    <a href="{% url 'home' %}" class="d-flex flex-column align-items-center text-white text-decoration-none">
+                        <img src="{% static 'images/logo.svg' %}" alt="Logo" class="img-fluid logo mb-2">
+                        <span class="menu-text fw-bold fs-4">Mission Board</span>
                     </a>
                 </div>
-                <div class="w-100 mb-3">
-                    <button class="btn btn-dark d-md-none position-absolute end-0 me-3" type="button" id="sidebarCollapse">
+                
+                <!-- Mobile Toggle Button -->
+                <div class="w-100 mb-3 d-lg-none">
+                    <button class="btn btn-mobile-toggle rounded-circle" type="button" id="sidebarCollapse">
                         <i class="bi bi-list"></i>
                     </button>
                 </div>
-                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 w-100 flex-grow-1" id="menu">
-                    <li class="nav-item w-100">
-                        <a href="{% url 'home' %}" class="nav-link px-0 text-white">
-                            <i class="bi bi-house"></i> <span class="menu-text ms-2">Home</span>
-                        </a>
-                    </li>
-                    <li class="nav-item w-100">
-                        <a href="{% url 'task_list' %}" class="nav-link px-0 text-white">
-                            <i class="bi bi-check2-square"></i> <span class="menu-text ms-2"> Minhas Tarefas</span>
-                        </a>
-                    </li>
-                    <li class="nav-item w-100">
-                        <a href="{% url 'goal_list' %}" class="nav-link px-0 text-white">
-                            <i class="bi bi-trophy"></i> <span class="menu-text ms-2">Metas e Objetivos</span>
-                        </a>
-                    </li>
-                    <li class="nav-item w-100">
-                        <a href="#" class="nav-link px-0 text-white">
-                            <i class="bi bi-gear"></i> <span class="menu-text ms-2">Configurações</span>
-                        </a>
-                    </li>
-                </ul>
-        
-                <!-- Separador -->
-                <hr class="border-secondary my-3">
 
-                <ul class="d-flex align-items-center flex-column mx-auto mb-3 list-unstyled">
-                    <li class="nav-item w-100 mt-auto">
-                        <form action="{% url 'logout' %}" method="post" style="display: inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="nav-link px-0 text-white" style="background: none; border: none; padding: 0;">
-                                <i class="bi bi-box-arrow-right"></i> <span class="menu-text ms-2">Sair</span>
-                            </button>
-                        </form>
-                    </li>
-                </ul>                                
+                <!-- Main Menu -->
+                <nav class="flex-grow-1">
+                    <ul class="nav nav-pills flex-column gap-2" id="menu">
+                        <li class="nav-item">
+                            <a href="{% url 'home' %}" class="nav-link px-3 py-2 text-white d-flex align-items-center gap-3 sidebar-link">
+                                <i class="bi bi-house"></i> <span class="menu-text">Home</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'task_list' %}" class="nav-link px-3 py-2 text-white d-flex align-items-center gap-3 sidebar-link">
+                                <i class="bi bi-check2-square"></i> <span class="menu-text">Minhas Tarefas</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'goal_list' %}" class="nav-link px-3 py-2 text-white d-flex align-items-center gap-3 sidebar-link">
+                                <i class="bi bi-trophy"></i> <span class="menu-text">Metas e Objetivos</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link px-3 py-2 text-white d-flex align-items-center gap-3 sidebar-link">
+                                <i class="bi bi-gear"></i> <span class="menu-text">Configurações</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- Footer Section -->
+                <div class="sidebar-footer mt-auto">
+                    <hr class="border-secondary my-3">
+                    <form action="{% url 'logout' %}" method="post" class="mb-4">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link w-100 px-3 py-2 text-white d-flex align-items-center gap-3 sidebar-link">
+                            <i class="bi bi-box-arrow-right"></i> <span class="menu-text">Sair</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Toggle Button -->
+                <button class="btn btn-toggle-sidebar" id="sidebarHide" type="button" title="Alternar menu">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
             </div>
         </div>
-        
-        <!-- Elemento espaçador para evitar sobreposição -->
-        <div class="col-auto" style="width: 250px;"></div>
+        <div class="col-auto" id="sidebar-spacer"></div>
     </div>
 </div>
 
 <style>
+    :root {
+        --sidebar-bg: linear-gradient(135deg, #232946 0%, #1a1a2e 100%);
+        --sidebar-accent: #eebbc3;
+        --sidebar-hover: rgba(238, 187, 195, 0.12);
+        --sidebar-width: 260px;
+        --sidebar-collapsed-width: 4.5rem;
+    }
+
     #sidebar {
-        transition: all 0.3s;
+        background: var(--sidebar-bg);
+        width: var(--sidebar-width);
         height: 100vh;
-        overflow-y: auto;
+        transition: all 0.3s ease;
+        z-index: 1030;
+        overflow-x: hidden;
+        border-top-right-radius: 24px;
+        border-bottom-right-radius: 24px;
     }
 
     .logo-container {
-        padding: 10px 10px 10px 0;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 16px;
+    }
+
+    .logo-container img {
+        max-width: 56px;
+        filter: drop-shadow(0 2px 8px var(--sidebar-accent));
+        transition: all 0.3s ease;
+    }
+
+    .logo-container .menu-text {
+        letter-spacing: 2px;
+        text-shadow: 0 2px 8px #232946;
+    }
+
+    .sidebar-link {
+        border-radius: 12px !important;
+        transition: all 0.2s ease;
+        border: 2px solid transparent;
+    }
+
+    .sidebar-link:hover {
+        background: var(--sidebar-hover);
+        color: var(--sidebar-accent) !important;
+        transform: translateX(4px);
+    }
+
+    .sidebar-link i {
+        font-size: 1.25rem;
+        min-width: 24px;
+    }
+
+    .btn-toggle-sidebar {
+        position: fixed;
+        bottom: 1.5rem;
+        left: calc(var(--sidebar-width) - 1.25rem);
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        background: var(--sidebar-accent);
+        border: none;
+        color: #232946;
+        transition: all 0.3s ease;
+        z-index: 1031;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-toggle-sidebar:hover {
+        background: #fff;
+        color: var(--sidebar-accent);
+        box-shadow: 0 2px 8px rgba(238,187,195,0.25);
+    }
+
+    .btn-mobile-toggle {
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+        background: transparent;
+        border: 2px solid var(--sidebar-accent);
+        color: var(--sidebar-accent);
+        width: 2.5rem;
+        height: 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     #sidebar.collapsed {
-        width: 4.5rem !important;
+        width: var(--sidebar-collapsed-width);
     }
 
-    #sidebar.collapsed .menu-text {
+    #sidebar.collapsed .menu-text,
+    #sidebar.collapsed .logo-container .menu-text {
         display: none;
     }
 
-    #sidebar.collapsed + div {
-        width: 4.5rem !important;
+    #sidebar.collapsed .logo-container img {
+        max-width: 36px;
     }
 
-    @media (max-width: 767.98px) {
+    #sidebar.collapsed .btn-toggle-sidebar {
+        left: calc(var(--sidebar-collapsed-width) - 1.25rem);
+    }
+
+    #sidebar.collapsed .btn-toggle-sidebar i {
+        transform: rotate(180deg);
+    }
+
+    #sidebar-spacer {
+        width: var(--sidebar-width);
+        transition: width 0.3s ease;
+    }
+
+    #sidebar.collapsed + #sidebar-spacer {
+        width: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 991.98px) {
         #sidebar {
-            width: 4.5rem;
+            width: var(--sidebar-collapsed-width);
         }
 
         #sidebar .menu-text {
@@ -91,26 +195,83 @@
         }
 
         #sidebar.expanded {
-            width: 250px !important;
+            width: var(--sidebar-width);
         }
 
         #sidebar.expanded .menu-text {
             display: inline;
         }
 
-        #sidebar + div {
-            width: 4.5rem !important;
+        #sidebar-spacer {
+            width: var(--sidebar-collapsed-width);
         }
 
-        #sidebar.expanded + div {
-            width: 250px !important;
+        #sidebar.expanded + #sidebar-spacer {
+            width: var(--sidebar-width);
+        }
+
+        .btn-toggle-sidebar {
+            left: calc(var(--sidebar-collapsed-width) - 1.25rem);
+        }
+
+        #sidebar.expanded .btn-toggle-sidebar {
+            left: calc(var(--sidebar-width) - 1.25rem);
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        #sidebar, .logo-container {
+            border-radius: 0;
         }
     }
 </style>
 
 <script>
-    document.getElementById('sidebarCollapse').addEventListener('click', function() {
-        const sidebar = document.getElementById('sidebar');
-        sidebar.classList.toggle('expanded');
+    const sidebar = document.getElementById('sidebar');
+    const spacer = document.getElementById('sidebar-spacer');
+    const sidebarCollapse = document.getElementById('sidebarCollapse');
+    const sidebarHide = document.getElementById('sidebarHide');
+
+    function toggleSidebar(action) {
+        const isMobile = window.innerWidth <= 991.98;
+        
+        if (action === 'collapse') {
+            sidebar.classList.toggle('collapsed');
+            if (sidebar.classList.contains('collapsed')) {
+                spacer.style.width = 'var(--sidebar-collapsed-width)';
+                sidebarHide.querySelector('i').style.transform = 'rotate(180deg)';
+            } else {
+                spacer.style.width = 'var(--sidebar-width)';
+                sidebarHide.querySelector('i').style.transform = 'rotate(0deg)';
+            }
+        } else if (action === 'expand' && isMobile) {
+            sidebar.classList.toggle('expanded');
+            if (sidebar.classList.contains('expanded')) {
+                spacer.style.width = 'var(--sidebar-width)';
+            } else {
+                spacer.style.width = 'var(--sidebar-collapsed-width)';
+            }
+        }
+    }
+
+    sidebarHide.addEventListener('click', () => toggleSidebar('collapse'));
+    sidebarCollapse.addEventListener('click', () => toggleSidebar('expand'));
+
+    // Handle window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            const isMobile = window.innerWidth <= 991.98;
+            if (isMobile) {
+                sidebar.classList.remove('collapsed', 'expanded');
+                spacer.style.width = 'var(--sidebar-collapsed-width)';
+            } else {
+                sidebar.classList.remove('expanded');
+                if (!sidebar.classList.contains('collapsed')) {
+                    spacer.style.width = 'var(--sidebar-width)';
+                }
+            }
+        }, 250);
     });
 </script>

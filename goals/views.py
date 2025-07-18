@@ -45,8 +45,6 @@ class GoalDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class CompleteGoalView(LoginRequiredMixin, UpdateView):
-
-
     def post(self, request, pk):
         goal = get_object_or_404(models.Goal, pk=pk)
         if goal.completed:

@@ -9,7 +9,7 @@ class GoalForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'due_date': forms.Select(attrs={'class': 'form-control'}),
+            'due_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'completed': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         } # Estilização do formulário
         labels = {

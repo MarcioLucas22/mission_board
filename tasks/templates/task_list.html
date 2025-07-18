@@ -5,119 +5,265 @@ Minhas Tarefas
 {% endblock %}
 
 {% block content %}
-<h3 class="display-6">Minhas Tarefas</h3>
-<div class="row mb-3">
-    <div class="col-md-4">
-        <form method="get" action="{% url 'task_list' %}">
-            <div class="input-group">
-                <input type="text" name="title" class="form-control" placeholder="Título da tarefa" value="{{ request.GET.title }}">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-search"></i>
-                </button>
-            </div>
-        </form>                    
-    </div>
-    <div class="col-md-4 offset-md-4">
-        <a href="{% url 'completed_tasks' %}" class="btn btn-success float-end btn-custom">
-            <i class="bi bi-check-circle"></i> Tarefas concluídas
+<style>
+    :root {
+        --color-primary: #6366f1;
+        --color-primary-light: #e0e7ff;
+        --color-text-dark: #3b3b5c;
+        --color-text-light: #4f4f7b;
+        --color-bg-light: #f8fafc;
+        --color-white: #ffffff;
+        --color-danger: #dc3545;
+        --color-warning: #ffc107;
+        --color-success: #198754;
+        --font-family-main: 'Montserrat', 'Poppins', sans-serif;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .page-title {
+        font-family: var(--font-family-main);
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--color-text-dark);
+    }
+
+    .btn-primary-custom {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+        color: var(--color-white);
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+    }
+
+    .btn-primary-custom:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 20px rgba(99, 102, 241, 0.3);
+    }
+
+    .filter-card {
+        background: var(--color-white);
+        padding: 2rem;
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.08);
+        margin-bottom: 2.5rem;
+    }
+
+    .filter-form .input-group, .filter-form .form-select {
+        height: 50px;
+        border-radius: 10px;
+    }
+    
+    .filter-form .form-control, .filter-form .form-select {
+        border: 2px solid #e0e7ff;
+        transition: border-color 0.2s ease;
+    }
+
+    .filter-form .form-control:focus, .filter-form .form-select:focus {
+        border-color: var(--color-primary);
+        box-shadow: none;
+    }
+
+    .btn-filter {
+        background-color: var(--color-text-dark);
+        color: var(--color-white);
+        border-radius: 10px;
+    }
+
+    .task-card {
+        background: var(--color-white);
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(31, 38, 135, 0.06);
+        border: none;
+        border-left: 5px solid;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .task-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
+    }
+
+    .task-card.priority-high { border-color: var(--color-danger); }
+    .task-card.priority-medium { border-color: var(--color-warning); }
+    .task-card.priority-low { border-color: var(--color-success); }
+
+    .card-header {
+        background: transparent;
+        border-bottom: 1px solid #f0f2f5;
+    }
+
+    .card-title {
+        font-weight: 600;
+        color: var(--color-text-dark);
+    }
+
+    .card-body {
+        flex-grow: 1;
+    }
+
+    .card-footer {
+        background: transparent;
+        border-top: none;
+    }
+
+    .task-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--color-text-light);
+        margin-bottom: 0.5rem;
+    }
+
+    .task-meta-item i {
+        color: var(--color-primary);
+    }
+
+    .category-badge {
+        background-color: var(--color-primary-light);
+        color: var(--color-primary);
+        font-weight: 500;
+        padding: 0.4em 0.8em;
+        border-radius: 8px;
+    }
+
+    .btn-action {
+        background: transparent;
+        border: 1px solid #e0e7ff;
+        color: var(--color-text-light);
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+        background: var(--color-primary-light);
+        color: var(--color-primary);
+        border-color: var(--color-primary);
+    }
+    
+    .btn-complete {
+        border: none;
+        background: transparent;
+        padding: 0;
+        font-size: 1.2rem;
+    }
+
+    .btn-complete .bi-check-circle-fill { color: var(--color-success); }
+    .btn-complete .bi-circle { color: var(--color-warning); }
+
+</style>
+
+<div class="page-header">
+    <h1 class="page-title">Minhas Tarefas</h1>
+    <div>
+        <a href="{% url 'completed_tasks' %}" class="btn btn-secondary me-2">
+            <i class="bi bi-check-circle me-2"></i>Tarefas Concluídas
         </a>
-        <a href="{% url 'task_create' %}" class="btn btn-primary float-end btn-custom me-3">
-            <i class="bi bi-plus"></i> Cadastrar tarefa
+        <a href="{% url 'task_create' %}" class="btn btn-primary-custom">
+            <i class="bi bi-plus-lg me-2"></i>Cadastrar Tarefa
         </a>
     </div>
 </div>
 
-<div class="row mb-3">
-    <div class="col-md-4">
-        <form action="{% url 'task_list' %}" method="get">
-            <div class="input-group">
-                <select name="priority" class="form-select">                    
-                    <option value="" {% if not request.GET.priority %} selected {% endif %}>Todas as prioridades</option>
-                    <option value="high" {% if request.GET.priority == 'high' %} selected {% endif %}>Alta</option>
-                    <option value="medium" {% if request.GET.priority == 'medium' %} selected {% endif %}>Média</option>
-                    <option value="low" {% if request.GET.priority == 'low' %} selected {% endif %}>Baixa</option>
+<!-- Filter Section -->
+<div class="filter-card">
+    <form method="get" action="{% url 'task_list' %}" class="filter-form">
+        <div class="row g-3 align-items-center">
+            <div class="col-lg-4">
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" name="title" class="form-control border-start-0" placeholder="Buscar pelo título..." value="{{ request.GET.title }}">
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <select name="priority" class="form-select">
+                    <option value="">Todas as prioridades</option>
+                    <option value="high" {% if request.GET.priority == 'high' %}selected{% endif %}>Alta</option>
+                    <option value="medium" {% if request.GET.priority == 'medium' %}selected{% endif %}>Média</option>
+                    <option value="low" {% if request.GET.priority == 'low' %}selected{% endif %}>Baixa</option>
                 </select>
+            </div>
+            <div class="col-lg-3">
                 <select name="category" class="form-select">
-                    <option value="" {% if not request.GET.category %} selected {% endif %}>Todas as categorias</option>
+                    <option value="">Todas as categorias</option>
                     {% for category in categories %}
-                        <option value="{{ category.id }}" {% if request.GET.category == category.id %} selected {% endif %}>
+                        <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
                             {{ category.name }}
                         </option>
                     {% endfor %}
                 </select>
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-filter"></i>Filtrar
-                </button>
             </div>
-        </form>
-    </div>
+            <div class="col-lg-2">
+                <button type="submit" class="btn btn-filter w-100"><i class="bi bi-filter me-2"></i>Filtrar</button>
+            </div>
+        </div>
+    </form>
 </div>
 
+<!-- Task List -->
 <div class="row mt-4">
     {% for task in tasks %}
     <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card h-100 shadow-sm">
+        <div class="card task-card priority-{{ task.priority }}">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0 text-truncate">{{ task.title }}</h5>
-                <div class="d-flex align-items-center">
-                    <span class="badge {% if task.completed %}bg-success{% else %}bg-warning{% endif %} me-2">
-                        {{ task.completed|yesno:"Concluída,Pendente" }}
-                    </span>
-                    <form method="POST" action="{% url 'complete_task' task.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-sm border-0 btn-outline-success" title="{% if task.completed %}Marcar como pendente{% else %}Marcar como concluída{% endif %}">
-                            <i class="bi bi-{% if task.completed %}clock{% else %}check-circle{% endif %}"></i>
-                        </button>
-                    </form>
-                </div>
+                <form method="POST" action="{% url 'complete_task' task.id %}" class="ms-2">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-complete" title="Marcar como concluída">
+                        <i class="bi {% if task.completed %}bi-check-circle-fill{% else %}bi-circle{% endif %}"></i>
+                    </button>
+                </form>
             </div>
 
             <div class="card-body">
-                <p class="card-text">{{ task.description }}</p>
-                <div class="mt-3">
-                    <small class="text-muted">
-                        <i class="bi bi-calendar-event"></i> Criado em: {{ task.created_at|date:"d/m/Y" }}
-                    </small>
-                    <br>
-                    <small class="text-muted">
-                        <i class="bi bi-clock"></i> Prazo: {{ task.due_date|date:"d/m/Y" }}
-                    </small>
+                <p class="card-text text-secondary mb-4">{{ task.description|truncatewords:20 }}</p>
+                <div class="task-meta">
+                    <div class="task-meta-item">
+                        <i class="bi bi-calendar-event"></i>
+                        <span><strong>Prazo:</strong> {{ task.due_date|date:"d/m/Y" }}</span>
+                    </div>
                     {% if task.goal %}
-                    <br>
-                    <small class="text-muted">
-                        <i class="bi bi-flag"></i> Meta relacionada: {{ task.goal.title }}
-                    </small>
+                    <div class="task-meta-item">
+                        <i class="bi bi-flag-fill"></i>
+                        <span><strong>Meta:</strong> {{ task.goal.title }}</span>
+                    </div>
                     {% endif %}
                 </div>
             </div>
-            <div class="card-footer bg-transparent">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        {% if task.priority == 'high' %}
-                            <span class="badge bg-danger ms-1">Alta Prioridade</span>
-                        {% elif task.priority == 'medium' %}
-                            <span class="badge bg-warning ms-1">Média Prioridade</span>
-                        {% else %}
-                            <span class="badge bg-success ms-1">Baixa Prioridade</span>
-                        {% endif %}
-                    </div>
-                    <div class="btn-group">
-                        <a href="{% url 'task_update' task.id %}" class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-pencil"></i>
-                        </a>
 
-                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ task.id }}">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+                <span class="category-badge">{{ task.category.name|default:"Sem categoria" }}</span>
+                <div class="btn-group">
+                    <a href="{% url 'task_update' task.id %}" class="btn-action me-2" title="Editar">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <button type="button" class="btn-action" data-bs-toggle="modal" data-bs-target="#deleteModal{{ task.id }}" title="Excluir">
+                        <i class="bi bi-trash"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal de Confirmação de Exclusão -->
+    <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteModal{{ task.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ task.id }}" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="deleteModalLabel{{ task.id }}">Confirmar Exclusão</h5>
@@ -128,19 +274,18 @@ Minhas Tarefas
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <form action="{% url 'task_delete' task.id %}" method="post" style="display: inline;">
+                    <form action="{% url 'task_delete' task.id %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+                        <button type="submit" class="btn btn-danger">Confirmar</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    
     {% empty %}
     <div class="col-12">
         <div class="alert alert-info text-center" role="alert">
-            <i class="bi bi-info-circle me-2"></i>Nenhuma tarefa encontrada.
+            <i class="bi bi-info-circle me-2"></i>Nenhuma tarefa encontrada com os filtros atuais.
         </div>
     </div>
     {% endfor %}

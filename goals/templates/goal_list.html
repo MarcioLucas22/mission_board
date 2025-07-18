@@ -1,28 +1,18 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Minhas Metas e Objetivos
+Minhas Metas
 {% endblock %}
 
 {% block content %}
-<h3 class="display-6">Minhas Metas e Objetivos</h3>
-<div class="row mb-3">
-    <div class="col-md-4">
-        <form method="get" action="{% url 'goal_list' %}">
-            <div class="input-group">
-                <input type="text" name="title" class="form-control" placeholder="Título da meta" value="{{ request.GET.title }}">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-search"></i>
-                </button>
-            </div>
-        </form>                    
-    </div>
-    <div class="col-md-4 offset-md-4">
-        <a href="{% url 'completed_goals' %}" class="btn btn-success float-end btn-custom">
-            <i class="bi bi-check-circle"></i> Metas concluídas
+<div class="page-header">
+    <h1 class="page-title">Minhas Metas e Objetivos</h1>
+    <div>
+        <a href="{% url 'completed_goals' %}" class="btn btn-secondary me-2">
+            <i class="bi bi-check-circle me-2"></i>Metas Concluídas
         </a>
-        <a href="{% url 'goal_create' %}" class="btn btn-primary float-end btn-custom me-3">
-            <i class="bi bi-plus"></i> Cadastrar meta
+        <a href="{% url 'goal_create' %}" class="btn btn-primary-custom">
+            <i class="bi bi-plus-lg me-2"></i>Cadastrar Meta
         </a>
     </div>
 </div>
@@ -30,57 +20,44 @@ Minhas Metas e Objetivos
 <div class="row mt-4">
     {% for goal in goals %}
     <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card h-100 shadow-sm">
+        <div class="card goal-card {% if goal.completed %}completed{% endif %}">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0 text-truncate">{{ goal.title }}</h5>
-                <div class="d-flex align-items-center">
-                    <span class="badge {% if goal.completed %}bg-success{% else %}bg-warning{% endif %} me-2">
-                        {{ goal.completed|yesno:"Concluída,Pendente" }}
-                    </span>
-                    <form method="POST" action="{% url 'complete_goal' goal.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-sm border-0 btn-outline-success" title="{% if goal.completed %}Marcar como pendente{% else %}Marcar como concluída{% endif %}">
-                            <i class="bi bi-{% if goal.completed %}clock{% else %}check-circle{% endif %}"></i>
-                        </button>
-                    </form>
-                </div>
+                <form method="POST" action="{% url 'complete_goal' goal.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-complete" title="Marcar como concluída">
+                        <i class="bi {% if goal.completed %}bi-check-circle-fill{% else %}bi-circle{% endif %}"></i>
+                    </button>
+                </form>
             </div>
 
             <div class="card-body">
-                <p class="card-text">{{ goal.description }}</p>
-                <div class="mt-3">
-                    <small class="text-muted">
-                        <i class="bi bi-calendar-event"></i> Criado em: {{ goal.created_at|date:"d/m/Y" }}
-                    </small>
-                    <br>
-                    <small class="text-muted">
-                        <i class="bi bi-clock"></i> Prazo: {{ goal.due_date|date:"d/m/Y" }}
-                    </small>
+                <p class="card-text text-secondary mb-4">{{ goal.description|truncatewords:20 }}</p>
+                <div class="task-meta-item">
+                    <i class="bi bi-calendar-event"></i>
+                    <span><strong>Prazo:</strong> {{ goal.due_date|date:"d/m/Y" }}</span>
                 </div>
             </div>
 
-            <div class="card-footer bg-transparent">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                        <a href="{% url 'goal_update' goal.id %}" class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-
-                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ goal.id }}">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
+            <div class="card-footer d-flex justify-content-end align-items-center">
+                <div class="btn-group">
+                    <a href="{% url 'goal_update' goal.id %}" class="btn-action me-2" title="Editar">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <button type="button" class="btn-action" data-bs-toggle="modal" data-bs-target="#deleteModal{{ goal.id }}" title="Excluir">
+                        <i class="bi bi-trash"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal de Confirmação de Exclusão -->
+    <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteModal{{ goal.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ goal.id }}" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel{{ goal.id }}">Confirmar Exclusão</h5>
+                    <h5 class="modal-title">Confirmar Exclusão</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -88,19 +65,18 @@ Minhas Metas e Objetivos
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <form action="{% url 'goal_delete' goal.id %}" method="post" style="display: inline;">
+                    <form action="{% url 'goal_delete' goal.id %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+                        <button type="submit" class="btn btn-danger">Confirmar</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    
     {% empty %}
     <div class="col-12">
         <div class="alert alert-info text-center" role="alert">
-            <i class="bi bi-info-circle me-2"></i>Nenhuma meta e objetivo encontrado.
+            <i class="bi bi-info-circle me-2"></i>Nenhuma meta encontrada.
         </div>
     </div>
     {% endfor %}

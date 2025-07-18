@@ -5,17 +5,31 @@ Cadastrar Meta
 {% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h3 class="display-6">Cadastrar Meta</h3>
+<div class="page-header">
+    <h1 class="page-title">Cadastrar Nova Meta</h1>
+</div>
 
-    <div class="card">
-        <div class="card-body">
-            <form action="{% url 'goal_create' %}" method="post" class="form">
-                {% csrf_token %}
-                {{ form.as_p }} <!-- Exibe os campos do formulário -->
-                <button type="submit" class="btn btn-primary">Cadastrar</button>
-            </form>
+<div class="form-card">
+    <form action="{% url 'goal_create' %}" method="post">
+        {% csrf_token %}
+        <div class="row g-4">
+            <div class="col-12">
+                <label for="id_title" class="form-label">Título</label>
+                {{ form.title }}
+            </div>
+            <div class="col-12">
+                <label for="id_description" class="form-label">Descrição</label>
+                {{ form.description }}
+            </div>
+            <div class="col-md-6">
+                <label for="id_due_date" class="form-label">Prazo</label>
+                {{ form.due_date }}
+            </div>
         </div>
-    </div>
-    <a href="{% url 'goal_list' %}" class="btn btn-secondary mt-3">Cancelar e voltar para a lista de metas</a>
+        <div class="d-flex justify-content-end mt-4">
+            <a href="{% url 'goal_list' %}" class="btn btn-secondary me-3">Cancelar</a>
+            <button type="submit" class="btn btn-primary-custom">Salvar Meta</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

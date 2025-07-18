@@ -5,19 +5,43 @@ Atualizar Tarefa
 {% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h3 class="display-6">Editar Tarefa</h3>
+<div class="page-header">
+    <h1 class="page-title">Editar Tarefa</h1>
+</div>
 
-    <div class="card">
-        <div class="card-body">
-            <form action="{% url 'task_update' object.id%}" method="post" class="form">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-primary">Editar</button>
-            </form>
+<div class="form-card">
+    <form action="{% url 'task_update' object.id %}" method="post">
+        {% csrf_token %}
+        <div class="row g-4">
+            <div class="col-12">
+                <label for="id_title" class="form-label">Título</label>
+                {{ form.title }}
+            </div>
+            <div class="col-12">
+                <label for="id_description" class="form-label">Descrição</label>
+                {{ form.description }}
+            </div>
+            <div class="col-md-4">
+                <label for="id_due_date" class="form-label">Prazo</label>
+                {{ form.due_date }}
+            </div>
+            <div class="col-md-4">
+                <label for="id_priority" class="form-label">Prioridade</label>
+                {{ form.priority }}
+            </div>
+            <div class="col-md-4">
+                <label for="id_category" class="form-label">Categoria</label>
+                {{ form.category }}
+            </div>
+            <div class="col-12">
+                <label for="id_goal" class="form-label">Meta Associada (Opcional)</label>
+                {{ form.goal }}
+            </div>
         </div>
-    </div>
-    <a href="{% url 'task_list' %}" class="btn btn-secondary mt-3">Cancelar e voltar para a lista de tarefas</a>
+        <div class="d-flex justify-content-end mt-4">
+            <a href="{% url 'task_list' %}" class="btn btn-secondary me-3">Cancelar</a>
+            <button type="submit" class="btn btn-primary-custom">Salvar Alterações</button>
+        </div>
+    </form>
 </div>
 {% endblock %}
-

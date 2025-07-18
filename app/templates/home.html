@@ -6,79 +6,115 @@ Home
 {% endblock %}
 
 {% block content %}
+<style>
+    .dashboard-container {
+        margin-top: 40px;
+        margin-bottom: 40px;
+        padding: 40px 30px;
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .card-chart {
+        background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+        border-radius: 18px;
+        box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.08);
+        padding: 32px 20px 24px 20px;
+        margin-bottom: 24px;
+        transition: transform 0.2s;
+    }
+    .card-chart:hover {
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.16);
+    }
+    .chart-container {
+        max-width: 320px;
+        margin: 0 auto;
+    }
+</style>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<div class="row mt-4 justify-content-center">
-    <div class="col-md-6 col-lg-5 text-center">
-        <h5 class="text-center mb-3">Tarefas Concluídas</h5>
-        <div class="d-flex justify-content-center">
-            <div class="position-relative" style="max-width: 350px; width: 100%;">
-                <canvas id="tasksCompletedChart" class="w-100 h-auto"></canvas>
+
+<div class="dashboard-container">
+    <div class="page-header">
+        <h1 class="page-title">Painel de Progresso</h1>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5 mb-4">
+            <div class="card-chart">
+                <div class="card-title text-center mb-3">
+                    <i class="bi bi-check2-square me-2" style="color:var(--color-success);"></i> Tarefas Concluídas
+                </div>
+                <div class="chart-container">
+                    <canvas id="tasksCompletedChart"></canvas>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-6 col-lg-5 text-center">
-        <h5 class="text-center mb-3">Metas Concluídas</h5>
-        <div class="d-flex justify-content-center">
-            <div class="position-relative" style="max-width: 350px; width: 100%;">
-                <canvas id="goalsCompletedChart" class="w-100 h-auto"></canvas>
+        <div class="col-md-6 col-lg-5 mb-4">
+            <div class="card-chart">
+                <div class="card-title text-center mb-3">
+                    <i class="bi bi-trophy me-2" style="color:var(--color-primary);"></i> Metas Concluídas
+                </div>
+                <div class="chart-container">
+                    <canvas id="goalsCompletedChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var tasksCompleted = JSON.parse('{{ tasks_completed|safe }}');
-        var tasksNotCompleted = JSON.parse('{{ tasks_not_completed|safe }}');
-    
-        var ctxTask = document.getElementById('tasksCompletedChart').getContext('2d');
-    
-        var tasksCompletedChart = new Chart(ctxTask, {
-            type: 'doughnut',
-            data: {
-                labels: ['Concluídas', 'Não Concluídas'],
-                datasets: [{
-                    data: [tasksCompleted, tasksNotCompleted],
-                    backgroundColor: ['#28a745', '#dc3545'], // Verde elegante para concluídas, vermelho sofisticado para não concluídas
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                plugins: {
-                    legend: {
-                        display: true
-                    },
-                }
+document.addEventListener("DOMContentLoaded", function () {
+    var tasksCompleted = JSON.parse('{{ tasks_completed|safe }}');
+    var tasksNotCompleted = JSON.parse('{{ tasks_not_completed|safe }}');
+    var ctxTask = document.getElementById('tasksCompletedChart').getContext('2d');
+    new Chart(ctxTask, {
+        type: 'doughnut',
+        data: {
+            labels: ['Concluídas', 'Não Concluídas'],
+            datasets: [{
+                data: [tasksCompleted, tasksNotCompleted],
+                backgroundColor: [ 'rgba(25, 135, 84, 0.85)', 'rgba(220, 53, 69, 0.75)' ],
+                borderColor: [ 'rgba(25, 135, 84, 1)', 'rgba(220, 53, 69, 1)' ],
+                borderWidth: 3,
+                hoverOffset: 14
+            }]
+        },
+        options: {
+            cutout: '70%',
+            plugins: {
+                legend: { display: false },
+                tooltip: { backgroundColor: '#fff', titleColor: '#3b3b5c', bodyColor: '#6366f1' }
             }
-        });
+        }
     });
-    
-    document.addEventListener("DOMContentLoaded", function () {
-        var goalsCompleted = JSON.parse('{{ goals_completed|safe }}');
-        var goalsNotCompleted = JSON.parse('{{ goals_not_completed|safe }}');
-    
-        var ctxGoal = document.getElementById('goalsCompletedChart').getContext('2d');
-    
-        var goalsCompletedChart = new Chart(ctxGoal, {
-            type: 'doughnut',
-            data: {
-                labels: ['Concluídas', 'Não Concluídas'],
-                datasets: [{
-                    data: [goalsCompleted, goalsNotCompleted],
-                    backgroundColor: ['#007bff', '#ff6b6b'], // Azul moderno para concluídas, vermelho suave para não concluídas
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                plugins: {
-                    legend: {
-                        display: true
-                    },
-                }
+
+    var goalsCompleted = JSON.parse('{{ goals_completed|safe }}');
+    var goalsNotCompleted = JSON.parse('{{ goals_not_completed|safe }}');
+    var ctxGoal = document.getElementById('goalsCompletedChart').getContext('2d');
+    new Chart(ctxGoal, {
+        type: 'doughnut',
+        data: {
+            labels: ['Concluídas', 'Não Concluídas'],
+            datasets: [{
+                data: [goalsCompleted, goalsNotCompleted],
+                backgroundColor: [ 'rgba(99, 102, 241, 0.85)', 'rgba(255, 107, 107, 0.75)' ],
+                borderColor: [ 'rgba(99, 102, 241, 1)', 'rgba(255, 107, 107, 1)' ],
+                borderWidth: 3,
+                hoverOffset: 14
+            }]
+        },
+        options: {
+            cutout: '70%',
+            plugins: {
+                legend: { display: false },
+                tooltip: { backgroundColor: '#fff', titleColor: '#3b3b5c', bodyColor: '#6366f1' }
             }
-        });
+        }
     });
-    
+});
 </script>
 {% endblock %}
